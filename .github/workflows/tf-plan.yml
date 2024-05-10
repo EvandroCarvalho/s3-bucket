@@ -28,15 +28,15 @@ jobs:
 
         - uses: actions/checkout@v4
         - uses: hashicorp/setup-terraform@v3
-        
-        - name: Terraform fmt
-          id: fmt
-          run: terraform fmt -check
-          continue-on-error: true
 
         - name: Terraform Init
           id: init
           run: terraform init
+
+        - name: Terraform fmt
+          id: fmt
+          run: terraform fmt -check
+          continue-on-error: true
         
         - name: Terraform Validate
           id: validate
@@ -104,3 +104,32 @@ jobs:
                   body: output
                 })
               }
+    run-terraform-apply:
+        name: "tf-apply"
+        needs: ["run-terraform-plan"]
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+              working-directory: ${{ github.workspace }}/terraform/
+        permissions:
+            pull-requests: write
+        steps:
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1      
+
+        - uses: actions/checkout@v4
+        - uses: hashicorp/setup-terraform@v3
+
+        - name: Terraform Init
+          id: init
+          run: terraform init
+
+        - name: Terraform apply
+          id: apply
+          run: terraform apply -auto-approve -input=false
+                 
