@@ -15,7 +15,7 @@ jobs:
 
         defaults:
             run:
-              working-directory: ${{ env.GITHUB_REPO_NAME }}/terraform/
+              working-directory: ${{ github.workspace }}/terraform/
         permissions:
             pull-requests: write
         steps:
