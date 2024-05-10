@@ -1,3 +1,22 @@
+terraform {
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "4.2.0"
+    }
+  }
+
+  backend "s3" {
+      bucket  = "backend-tfstate-gha"
+      key     = "remote-state/terraform.tfstate"
+      region  = "us-east-1"
+      access_key = var.aws_access_key_id
+      secret_key = var.aws_access_secret_id
+  }
+}
+
+
 provider "aws" {
   region  = "us-east-1"
   access_key = var.aws_access_key_id

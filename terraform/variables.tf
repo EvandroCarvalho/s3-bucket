@@ -11,8 +11,3 @@ variable "region" {
     description = "Region of AWS VPC"
     default = ""
 }
-
-variable "account_number" {
-    description = "AWS account number"
-    default = "947810884862"
-}
